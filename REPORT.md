@@ -171,9 +171,10 @@ MEDIA:/home/$USER/superhero_output/superhero_20260722_145856.png
 
 ### 4.3 示例产出
 
-见仓库 [`docs/examples/`](docs/examples/)：
-- `superhero_default.png` — 默认超级英雄 prompt 出图
-- `superhero_golden_flash.png` — "金色铠甲闪电侠" Agent 链路出图
+见仓库 [`docs/superhero_images/`](docs/superhero_images/)：
+- `superhero_20260722_144329.png` — 默认超级英雄 prompt 出图
+- `superhero_20260722_145856.png` — "金色铠甲闪电侠" Agent 链路出图
+- 其余 4 张为不同中文输入的 Agent 生成结果
 
 ---
 
@@ -213,7 +214,7 @@ skill 契约（`SKILL.md`）与 `MEDIA:` 输出协议完全对齐官方设计，
 ├── dreambook_planb/        📖 梦想蓝图 Plan B（5 Agent 协作）
 ├── webapp/                 🌐 FastAPI Web 界面（SSE 实时日志）
 ├── dreambook_router.py     智能路由（有照片→绘本，无照片→蓝图）
-├── docs/examples/          示例输出图
+├── docs/                  demo 视频 + 生成的示例图
 ├── PROJECT.md              答辩核心文档
 ├── REPORT.md               本报告
 └── README.md

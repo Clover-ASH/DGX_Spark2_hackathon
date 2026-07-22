@@ -5,7 +5,7 @@
 > 在 DGX Spark（GB10 Blackwell）上构建**完全本地**的多模态 Agent：
 > LLM（Ollama qwen3.6）创作 + FLUX.1-schnell 出图，全程零外网依赖。
 
-![hero](docs/examples/superhero_golden_flash.png)
+![hero](docs/superhero_images/superhero_20260722_145856.png)
 
 ---
 
@@ -48,7 +48,7 @@
 | GPU 显存峰值 | **33.7 GB** |
 | 完整 Agent 链路（中文→LLM→FLUX） | ✅ 出图 |
 
-示例图见 [`docs/examples/`](docs/examples/)。
+示例图见 [`docs/superhero_images/`](docs/superhero_images/)。
 
 ---
 
@@ -91,7 +91,7 @@
 │
 ├── dreambook_router.py     智能路由（有照片→绘本，无照片→蓝图）
 ├── PROJECT.md              答辩核心文档
-└── docs/examples/          示例输出图
+└── docs/                  demo 视频 + 生成的示例图
 ```
 
 ---
