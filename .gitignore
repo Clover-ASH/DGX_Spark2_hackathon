@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.venv/
+venv/
+env/
+
+# 模型 / 数据（体积大，不应进仓库）
+ms_cache/
+*.safetensors
+*.ckpt
+*.bin
+*.pt
+*.onnx
+
+# 运行时输出（每次生成都不同，不纳入版本控制）
+superhero_output/
+dreambook_output/
+dream_blueprint_output/
+outputs/
+uploads/
+*.pid
+*.log
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
+
+# 敏感：本地环境配置（含可能的环境特定路径）
+.env
+.env.local

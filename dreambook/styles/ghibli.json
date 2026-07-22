@@ -1,0 +1,9 @@
+{
+  "name": "ghibli",
+  "label": "吉卜力水彩风",
+  "label_en": "Studio Ghibli Watercolor",
+  "prompt_prefix": "Studio Ghibli style, Hayao Miyazaki hand-painted watercolor, soft pastel tones, lush detailed background, warm nostalgic light, gentle anime faces, children's storybook illustration, traditional cel animation look",
+  "negative_prefix": "3D render, photorealistic, harsh lighting, modern CGI, scary, deformed, extra fingers, low quality",
+  "steps": 24,
+  "cfg": 3.0
+}

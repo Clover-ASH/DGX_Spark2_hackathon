@@ -1,0 +1,9 @@
+{
+  "name": "comic",
+  "label": "美漫英雄风",
+  "label_en": "American Comic Hero",
+  "prompt_prefix": "American superhero comic book art, bold ink outlines, dynamic action pose, halftone shading, vibrant pop art colors, dramatic lighting, Marvel/DC style illustration, children's hero storybook",
+  "negative_prefix": "photorealistic, soft watercolor, pastel, scary realistic gore, deformed, extra fingers, low quality, blurry",
+  "steps": 24,
+  "cfg": 4.0
+}

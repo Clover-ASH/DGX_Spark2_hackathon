@@ -1,0 +1,9 @@
+{
+  "name": "oil_painting",
+  "label": "古典油画绘本",
+  "label_en": "Classical Oil Painting Storybook",
+  "prompt_prefix": "classical oil painting style children's book illustration, rich impasto brush strokes, warm golden hour lighting, renaissance palette, textured canvas, painterly soft focus background, storybook hero portrait",
+  "negative_prefix": "3D render, modern digital, photorealistic sharp, anime, scary, deformed, extra fingers, low quality",
+  "steps": 26,
+  "cfg": 3.5
+}

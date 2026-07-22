@@ -1,0 +1,9 @@
+{
+  "name": "watercolor",
+  "label": "经典童书水彩",
+  "label_en": "Classic Children's Book Watercolor",
+  "prompt_prefix": "classic children's picture book watercolor illustration, soft washes, hand-painted texture, gentle pastel palette, whimsical and warm, storybook art style, paper texture, dreamy lighting",
+  "negative_prefix": "3D render, photorealistic, sharp digital edges, scary, deformed, extra fingers, low quality, blurry",
+  "steps": 22,
+  "cfg": 3.0
+}

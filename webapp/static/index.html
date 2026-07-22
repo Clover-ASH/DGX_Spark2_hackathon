@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>梦想成真 · DreamBook</title>
+<!-- marked.js 用于渲染 markdown 绘本 -->
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+  :root {
+    --bg: #FAF7F2;
+    --bg-card: #FFFFFF;
+    --bg-soft: #F5EFE6;
+    --primary: #E8845C;
+    --primary-soft: #FCE8DC;
+    --secondary: #6B9BD2;
+    --secondary-soft: #E1ECF7;
+    --text: #3D3A35;
+    --text-soft: #7A736A;
+    --text-muted: #B5AFA5;
+    --border: #EDE6DB;
+    --shadow: 0 4px 20px rgba(180, 165, 140, 0.08);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .nav {
+    background: rgba(255,255,255,0.85);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-size: 22px; font-weight: 600; color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo small {
+    font-size: 12px; color: var(--text-muted); font-weight: 400; margin-left: 6px;
+  }
+
+  .container {
+    max-width: 1200px; margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .hero { text-align: center; margin-bottom: 48px; padding: 20px 0; }
+  .hero-deco { font-size: 28px; margin-bottom: 16px; opacity: 0.6; }
+  .hero h1 {
+    font-size: 38px; font-weight: 600; color: var(--text);
+    letter-spacing: -1px; margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--primary); }
+  .hero p { font-size: 16px; color: var(--text-soft); max-width: 600px; margin: 0 auto; }
+
+  .main-card {
+    background: var(--bg-card); border-radius: var(--radius);
+    padding: 40px; box-shadow: var(--shadow); margin-bottom: 32px;
+  }
+
+  .form-group { margin-bottom: 24px; }
+  .form-label {
+    display: block; font-size: 14px; font-weight: 500;
+    color: var(--text); margin-bottom: 8px;
+  }
+  .form-label small {
+    font-size: 12px; color: var(--text-muted); font-weight: 400; margin-left: 8px;
+  }
+  .form-input {
+    width: 100%; padding: 12px 16px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 15px; color: var(--text); background: var(--bg);
+    font-family: inherit; transition: all 0.2s;
+  }
+  .form-input:focus {
+    outline: none; border-color: var(--primary); background: var(--bg-card);
+    box-shadow: 0 0 0 3px rgba(232,132,92,0.1);
+  }
+  .dream-input {
+    font-size: 18px; padding: 16px 20px;
+    text-align: center; background: var(--bg-soft);
+  }
+
+  .plan-tabs {
+    display: flex; gap: 12px; margin-bottom: 20px;
+    background: var(--bg-soft); padding: 6px; border-radius: var(--radius-sm);
+  }
+  .plan-tab {
+    flex: 1; padding: 12px 16px; text-align: center;
+    border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;
+    color: var(--text-soft); transition: all 0.2s; user-select: none;
+  }
+  .plan-tab.active {
+    background: var(--bg-card); color: var(--primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .plan-tab small {
+    display: block; font-size: 11px; color: var(--text-muted);
+    margin-top: 2px; font-weight: 400;
+  }
+
+  .style-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .style-card {
+    padding: 16px 12px; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); text-align: center; cursor: pointer;
+    transition: all 0.2s; background: var(--bg);
+  }
+  .style-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .style-card.active { border-color: var(--primary); background: var(--primary-soft); }
+  .style-emoji { font-size: 24px; margin-bottom: 4px; }
+  .style-name { font-size: 13px; font-weight: 500; }
+  .style-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .upload-area {
+    border: 2px dashed var(--border); border-radius: var(--radius-sm);
+    padding: 28px; text-align: center; cursor: pointer;
+    transition: all 0.2s; background: var(--bg);
+  }
+  .upload-area:hover { border-color: var(--primary); background: var(--primary-soft); }
+  .upload-area.has-file {
+    border-color: var(--primary); background: var(--primary-soft); border-style: solid;
+  }
+  .upload-icon { font-size: 32px; margin-bottom: 8px; }
+  .upload-text { font-size: 14px; color: var(--text-soft); }
+  .upload-filename { font-size: 13px; color: var(--primary); margin-top: 6px; font-weight: 500; }
+  .upload-preview { max-width: 120px; max-height: 120px; border-radius: 8px; margin-top: 10px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 32px; background: var(--primary); color: white;
+    border: none; border-radius: var(--radius-sm);
+    font-size: 16px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; font-family: inherit; text-decoration: none;
+  }
+  .btn:hover:not(:disabled) {
+    background: #D67048; transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(232,132,92,0.3);
+  }
+  .btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+  .btn-block { width: 100%; }
+  .btn-secondary { background: var(--bg-soft); color: var(--text); }
+  .btn-secondary:hover:not(:disabled) { background: var(--border); }
+
+  /* === 等待区（轮询中） === */
+  .waiting-card {
+    background: var(--bg-card); border-radius: var(--radius);
+    padding: 40px; box-shadow: var(--shadow); text-align: center;
+    display: none;
+  }
+  .waiting-card.show { display: block; }
+  .waiting-emoji {
+    font-size: 56px; margin-bottom: 16px;
+    animation: bounce 1.5s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .waiting-title { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+  .waiting-subtitle { font-size: 14px; color: var(--text-soft); margin-bottom: 24px; }
+
+  /* 进度条 */
+  .progress-bar-bg {
+    width: 100%; height: 8px; background: var(--bg-soft);
+    border-radius: 4px; overflow: hidden; margin-bottom: 16px;
+  }
+  .progress-bar-fill {
+    height: 100%; background: var(--primary);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-steps {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--text-muted); margin-top: 12px;
+  }
+  .progress-step.active { color: var(--primary); font-weight: 500; }
+  .progress-step.done { color: #4CAF50; }
+
+  .waiting-status {
+    margin-top: 20px; padding: 12px 16px;
+    background: var(--bg-soft); border-radius: var(--radius-sm);
+    font-size: 13px; color: var(--text-soft);
+    min-height: 20px;
+  }
+  .waiting-timer {
+    font-size: 12px; color: var(--text-muted); margin-top: 8px;
+  }
+
+  /* === 结果区 === */
+  .result-card {
+    background: var(--bg-card); border-radius: var(--radius);
+    padding: 40px; box-shadow: var(--shadow); text-align: center;
+    display: none;
+  }
+  .result-card.show { display: block; animation: fadeIn 0.5s ease; }
+  .result-card.error { background: #FFF5F5; border: 1px solid #FECACA; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .result-emoji { font-size: 64px; margin-bottom: 16px; }
+  .result-title { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+  .result-subtitle { font-size: 14px; color: var(--text-soft); margin-bottom: 24px; }
+
+  /* markdown 渲染区（绘本预览） */
+  .book-preview {
+    text-align: left;
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 48px 56px;
+    margin: 0 auto 24px;
+    max-width: 800px;
+    max-height: 70vh;
+    overflow-y: auto;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", serif;
+    line-height: 1.8;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .book-preview h1 {
+    text-align: center; color: var(--primary);
+    font-size: 32px; margin-bottom: 8px; font-weight: 600;
+  }
+  .book-preview h2 {
+    text-align: center; color: var(--text); font-size: 24px;
+    margin-top: 32px;
+  }
+  .book-preview blockquote {
+    text-align: center; color: var(--text-soft);
+    font-style: italic; border: none; padding: 0;
+    margin: 8px 0 24px;
+  }
+  .book-preview img {
+    display: block; max-width: 100%;
+    width: 100%; max-width: 600px;
+    margin: 24px auto; border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .book-preview hr {
+    border: none; border-top: 1px dashed var(--border);
+    margin: 32px 0;
+  }
+  .book-preview p {
+    font-size: 16px; color: var(--text);
+    margin: 16px 0; text-align: center;
+  }
+  .book-preview p strong {
+    color: var(--primary); font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .book-preview sub, .book-preview sup {
+    color: var(--text-muted); font-size: 12px;
+  }
+
+  /* PDF 备选预览（Plan B 用） */
+  .result-preview-pdf {
+    width: 100%; max-width: 800px; height: 600px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    margin: 0 auto 24px; background: var(--bg-soft);
+  }
+
+  .result-actions {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 768px) {
+    .container { padding: 24px 16px; }
+    .hero h1 { font-size: 28px; }
+    .main-card { padding: 24px; }
+    .plan-tabs { flex-direction: column; }
+  }
+
+  .footer {
+    text-align: center; color: var(--text-muted);
+    font-size: 12px; padding: 40px 0 20px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">
+      <span>📖</span> 梦想成真<small>DreamBook</small>
+    </div>
+    <div style="font-size: 13px; color: var(--text-soft);">
+      Made on DGX Spark
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-deco">✨ 🚀 🎨 🌟 🦒</div>
+    <h1>小时候说的<span>「我想成为…」</span></h1>
+    <p>现在，让 AI 把它画出来。<br>有照片就有绘本，没照片也有蓝图。</p>
+  </div>
+
+  <!-- 主表单 -->
+  <div class="main-card" id="formCard">
+
+    <div class="plan-tabs">
+      <div class="plan-tab active" data-plan="auto">
+        🪄 自动选择
+        <small>有照片→绘本，没照片→蓝图</small>
+      </div>
+      <div class="plan-tab" data-plan="a">
+        📚 梦想绘本
+        <small>FLUX 出图，6 页故事</small>
+      </div>
+      <div class="plan-tab" data-plan="b">
+        🗺️ 梦想蓝图
+        <small>5 Agent 协作，含未来之信</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">你的梦想是什么？ <small>越具体越好</small></label>
+      <input type="text" class="form-input dream-input" id="dreamInput"
+             placeholder="我想成为宇航员…" value="我想成为宇航员">
+    </div>
+
+    <div id="planAOptions">
+      <div class="form-group">
+        <label class="form-label">绘本风格</label>
+        <div class="style-grid">
+          <div class="style-card active" data-style="pixar">
+            <div class="style-emoji">🤖</div>
+            <div class="style-name">皮克斯</div>
+            <div class="style-desc">3D 动画</div>
+          </div>
+          <div class="style-card" data-style="ghibli">
+            <div class="style-emoji">🍃</div>
+            <div class="style-name">吉卜力</div>
+            <div class="style-desc">水彩治愈</div>
+          </div>
+          <div class="style-card" data-style="watercolor">
+            <div class="style-emoji">💧</div>
+            <div class="style-name">童书水彩</div>
+            <div class="style-desc">经典温柔</div>
+          </div>
+          <div class="style-card" data-style="oil_painting">
+            <div class="style-emoji">🎨</div>
+            <div class="style-name">油画</div>
+            <div class="style-desc">古典厚重</div>
+          </div>
+          <div class="style-card" data-style="comic">
+            <div class="style-emoji">💥</div>
+            <div class="style-name">美漫</div>
+            <div class="style-desc">热血动感</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">孩子的照片 <small>可选 · 上传后走绘本</small></label>
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">点击或拖拽上传一张正面照</div>
+          <div class="upload-filename hidden" id="uploadFilename"></div>
+          <img class="upload-preview hidden" id="uploadPreview">
+          <input type="file" id="faceInput" accept="image/*" class="hidden">
+        </div>
+      </div>
+    </div>
+
+    <div id="planBOptions" class="hidden">
+      <div class="form-group">
+        <label class="form-label">主角名字 <small>可选</small></label>
+        <input type="text" class="form-input" id="nameInput" placeholder="小明">
+      </div>
+      <div class="form-group">
+        <label class="form-label">年龄 <small>可选</small></label>
+        <input type="number" class="form-input" id="ageInput" placeholder="8" min="1" max="100">
+      </div>
+    </div>
+
+    <button class="btn btn-block" id="submitBtn">
+      <span>✨ 让梦想被看见</span>
+    </button>
+  </div>
+
+  <!-- 等待区（轮询中） -->
+  <div class="waiting-card" id="waitingCard">
+    <div class="waiting-emoji" id="waitingEmoji">🎨</div>
+    <div class="waiting-title" id="waitingTitle">AI 正在为你创作…</div>
+    <div class="waiting-subtitle" id="waitingSubtitle">这可能需要 2-5 分钟，请稍候</div>
+
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+    <div class="progress-steps">
+      <span class="progress-step" id="step1">① 提交</span>
+      <span class="progress-step" id="step2">② 排队</span>
+      <span class="progress-step" id="step3">③ 创作</span>
+      <span class="progress-step" id="step4">④ 完成</span>
+    </div>
+
+    <div class="waiting-status" id="waitingStatus">连接服务中…</div>
+    <div class="waiting-timer" id="waitingTimer">已等待 0 秒</div>
+  </div>
+
+  <!-- 结果区 -->
+  <div class="result-card" id="resultCard">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div class="result-title" id="resultTitle">梦想成真！</div>
+    <div class="result-subtitle" id="resultSubtitle">绘本已为你生成</div>
+
+    <!-- markdown 绘本渲染区（Plan A 用） -->
+    <div class="book-preview" id="bookPreview" style="display:none;"></div>
+    <!-- PDF 预览区（Plan B 用） -->
+    <iframe class="result-preview-pdf" id="resultPreviewFrame" style="display:none;"></iframe>
+
+    <div class="result-actions" id="resultActions">
+      <a class="btn" id="previewBtn" target="_blank">📄 新窗口查看</a>
+      <a class="btn btn-secondary" id="downloadBtn">⬇ 下载 zip</a>
+      <button class="btn btn-secondary" id="newDreamBtn">🔁 再做一个</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    Made with ❤️ on NVIDIA DGX Spark · 让 Agent 创作一切
+  </div>
+</div>
+
+<script>
+const state = {
+  plan: 'auto', style: 'pixar', faceFile: null,
+  currentTaskId: null, pollTimer: null, startTime: 0,
+};
+const $ = (id) => document.getElementById(id);
+
+// 方案切换
+document.querySelectorAll('.plan-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    state.plan = tab.dataset.plan;
+    updatePlanOptions();
+  });
+});
+function updatePlanOptions() {
+  const showA = state.plan === 'auto' || state.plan === 'a';
+  const showB = state.plan === 'auto' || state.plan === 'b';
+  $('planAOptions').classList.toggle('hidden', !showA);
+  $('planBOptions').classList.toggle('hidden', !showB);
+}
+
+// 风格
+document.querySelectorAll('.style-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    state.style = card.dataset.style;
+  });
+});
+
+// 照片上传
+const uploadArea = $('uploadArea');
+const faceInput = $('faceInput');
+uploadArea.addEventListener('click', () => faceInput.click());
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); });
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  if (e.dataTransfer.files.length) {
+    faceInput.files = e.dataTransfer.files;
+    handleFile(e.dataTransfer.files[0]);
+  }
+});
+faceInput.addEventListener('change', e => {
+  if (e.target.files.length) handleFile(e.target.files[0]);
+});
+function handleFile(file) {
+  state.faceFile = file;
+  $('uploadFilename').textContent = '✓ ' + file.name;
+  $('uploadFilename').classList.remove('hidden');
+  uploadArea.classList.add('has-file');
+  const reader = new FileReader();
+  reader.onload = e => {
+    $('uploadPreview').src = e.target.result;
+    $('uploadPreview').classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+}
+
+// 提交
+$('submitBtn').addEventListener('click', submitDream);
+
+async function submitDream() {
+  const dream = $('dreamInput').value.trim();
+  if (!dream) { alert('请输入你的梦想～'); return; }
+
+  const fd = new FormData();
+  fd.append('dream', dream);
+  fd.append('plan', state.plan);
+  fd.append('style', state.style);
+  if (state.plan === 'b' || (state.plan === 'auto' && !state.faceFile)) {
+    if ($('nameInput').value.trim()) fd.append('name', $('nameInput').value.trim());
+    if ($('ageInput').value) fd.append('age', $('ageInput').value);
+  }
+  if (state.faceFile) fd.append('face', state.faceFile);
+
+  $('submitBtn').disabled = true;
+  $('submitBtn').innerHTML = '<span>⏳ 提交中…</span>';
+
+  try {
+    const r = await fetch('/api/dream', { method: 'POST', body: fd });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.detail || '提交失败');
+
+    state.currentTaskId = data.task_id;
+    state.startTime = Date.now();
+
+    // 切到等待界面
+    $('formCard').style.display = 'none';
+    $('waitingCard').classList.add('show');
+    $('step1').classList.add('done');
+
+    // 根据方案显示不同提示
+    const willUseA = state.plan === 'a' || (state.plan === 'auto' && state.faceFile);
+    if (willUseA) {
+      $('waitingEmoji').textContent = '🎨';
+      $('waitingTitle').textContent = '正在创作绘本…';
+      $('waitingSubtitle').textContent = '加载模型 + 生成 6 张插图，约 3-5 分钟';
+    } else {
+      $('waitingEmoji').textContent = '🗺️';
+      $('waitingTitle').textContent = '5 位 AI Agent 正在协作…';
+      $('waitingSubtitle').textContent = '梦想解析 → 路径设计 → 行动建议 → 风险评估 → 未来之信';
+    }
+
+    // 开始轮询（每 5 秒）
+    startPolling(data.task_id);
+  } catch (e) {
+    alert(e.message);
+    $('submitBtn').disabled = false;
+    $('submitBtn').innerHTML = '<span>✨ 让梦想被看见</span>';
+  }
+}
+
+// === 核心：轮询 ===
+function startPolling(taskId) {
+  if (state.pollTimer) clearInterval(state.pollTimer);
+
+  // 立即查一次
+  pollOnce(taskId);
+
+  // 然后每 5 秒查一次
+  state.pollTimer = setInterval(() => pollOnce(taskId), 5000);
+
+  // 计时器（每秒更新）
+  setInterval(() => updateTimer(), 1000);
+}
+
+function updateTimer() {
+  if (!state.startTime) return;
+  const sec = Math.floor((Date.now() - state.startTime) / 1000);
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  $('waitingTimer').textContent = `已等待 ${m}:${s.toString().padStart(2,'0')}`;
+}
+
+async function pollOnce(taskId) {
+  try {
+    const r = await fetch(`/api/task/${taskId}`);
+    const t = await r.json();
+
+    // 更新进度
+    updateProgress(t);
+
+    // 更新状态文字（取最后一条日志）
+    if (t.logs && t.logs.length > 0) {
+      const lastLog = t.logs[t.logs.length - 1];
+      $('waitingStatus').textContent = lastLog.msg;
+    }
+
+    if (t.status === 'done' || t.status === 'fallback') {
+      clearInterval(state.pollTimer);
+      showResult(t);
+    } else if (t.status === 'error') {
+      clearInterval(state.pollTimer);
+      showError(t);
+    }
+  } catch (e) {
+    // 网络抖动，下次再试
+    $('waitingStatus').textContent = '⚠️ 网络抖动，正在重试…';
+  }
+}
+
+function updateProgress(t) {
+  let pct = 0;
+  if (t.status === 'queued') {
+    pct = 10;
+    $('step2').classList.add('active');
+    $('waitingStatus').textContent = `排队中（位置 ${t.queue_position || 1}）...`;
+  } else if (t.status === 'running') {
+    $('step2').classList.add('done');
+    $('step3').classList.add('active');
+    // 根据已用时间估算进度
+    if (t.started_at) {
+      const elapsed = Date.now() / 1000 - t.started_at;
+      const planUsed = t.plan_used || state.plan;
+      const totalTime = (planUsed === 'a' || (state.plan !== 'b' && state.faceFile)) ? 240 : 180;
+      pct = Math.min(90, 20 + (elapsed / totalTime) * 70);
+    }
+  } else if (t.status === 'done' || t.status === 'fallback') {
+    pct = 100;
+    $('step3').classList.add('done');
+    $('step4').classList.add('done');
+  }
+  $('progressBar').style.width = pct + '%';
+}
+
+function showResult(t) {
+  $('waitingCard').classList.remove('show');
+  const card = $('resultCard');
+  card.classList.add('show');
+  card.classList.remove('error');
+
+  $('resultEmoji').textContent = t.status === 'fallback' ? '🎊' : '🎉';
+  $('resultTitle').textContent = t.status === 'fallback'
+    ? '梦想成真！（用了降级方案）' : '梦想成真！';
+
+  const planLabel = t.plan_used === 'a' ? '梦想绘本' : '梦想蓝图';
+  const dur = Math.round(t.finished_at - t.started_at);
+  $('resultSubtitle').textContent = `${planLabel} · 共耗时 ${dur} 秒`;
+
+  // 隐藏所有预览容器
+  $('bookPreview').style.display = 'none';
+  $('resultPreviewFrame').style.display = 'none';
+
+  // 根据类型渲染
+  if (t.result_type === 'markdown') {
+    // 拉 markdown 原文，用 marked.js 渲染
+    fetch(`/api/markdown/${t.id}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.markdown) {
+          $('bookPreview').innerHTML = marked.parse(data.markdown);
+          $('bookPreview').style.display = 'block';
+          $('bookPreview').scrollTop = 0;
+        } else if (data.pdf_url) {
+          $('resultPreviewFrame').src = data.pdf_url;
+          $('resultPreviewFrame').style.display = 'block';
+        }
+      })
+      .catch(err => {
+        $('resultSubtitle').textContent = '预览加载失败，请点下载查看';
+      });
+  } else if (t.result_type === 'pdf') {
+    $('resultPreviewFrame').src = `/api/preview/${t.id}`;
+    $('resultPreviewFrame').style.display = 'block';
+  }
+
+  // 恢复默认按钮组
+  $('resultActions').innerHTML = `
+    <a class="btn" id="previewBtn" target="_blank" href="/api/preview/${t.id}">📄 新窗口查看</a>
+    <a class="btn btn-secondary" id="downloadBtn" href="/api/zip/${t.id}">⬇ 下载 zip</a>
+    <button class="btn btn-secondary" id="newDreamBtn">🔁 再做一个</button>
+  `;
+  $('newDreamBtn').addEventListener('click', resetForm);
+}
+
+function showError(t) {
+  $('waitingCard').classList.remove('show');
+  const card = $('resultCard');
+  card.classList.add('show', 'error');
+  $('resultEmoji').textContent = '😢';
+  $('resultTitle').textContent = '出错了';
+  $('resultSubtitle').innerHTML = (t.error || '未知错误') +
+    '<br><small style="color: var(--text-muted);">别担心——AI 创作偶尔会失败。点下方按钮切换更稳的方案重试。</small>';
+  $('bookPreview').style.display = 'none';
+  $('resultPreviewFrame').src = '';
+  $('resultPreviewFrame').style.display = 'none';
+
+  $('resultActions').innerHTML = `
+    <button class="btn" id="retryBtn">🛡️ 重试（用更稳的方案）</button>
+    <button class="btn btn-secondary" id="restartBtn">🔄 重新填写</button>
+  `;
+  $('retryBtn').addEventListener('click', () => retryWithPlanB(t));
+  $('restartBtn').addEventListener('click', resetForm);
+}
+
+async function retryWithPlanB(oldTask) {
+  $('resultCard').classList.remove('show', 'error');
+  $('formCard').style.display = 'none';
+  $('waitingCard').classList.add('show');
+  $('waitingEmoji').textContent = '🛡️';
+  $('waitingTitle').textContent = '切换到更稳的方案，重新创作…';
+  $('waitingSubtitle').textContent = '梦想蓝图（5 Agent 协作）';
+
+  const fd = new FormData();
+  fd.append('dream', oldTask.dream);
+  fd.append('plan', 'b');
+  fd.append('style', oldTask.style || 'pixar');
+  if (oldTask.name) fd.append('name', oldTask.name);
+  if (oldTask.age) fd.append('age', oldTask.age);
+
+  try {
+    const r = await fetch('/api/dream', { method: 'POST', body: fd });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.detail || '提交失败');
+    state.currentTaskId = data.task_id;
+    state.startTime = Date.now();
+    // 重置进度
+    ['step1','step2','step3','step4'].forEach(id => {
+      $(id).classList.remove('active', 'done');
+    });
+    $('step1').classList.add('done');
+    $('progressBar').style.width = '0%';
+    startPolling(data.task_id);
+  } catch (e) {
+    alert(e.message);
+    resetForm();
+  }
+}
+
+function resetForm() {
+  $('resultCard').classList.remove('show', 'error');
+  $('waitingCard').classList.remove('show');
+  $('formCard').style.display = 'block';
+  $('submitBtn').disabled = false;
+  $('submitBtn').innerHTML = '<span>✨ 让梦想被看见</span>';
+  // 重置进度
+  ['step1','step2','step3','step4'].forEach(id => {
+    $(id).classList.remove('active', 'done');
+  });
+  $('progressBar').style.width = '0%';
+  state.startTime = 0;
+}
+
+updatePlanOptions();
+</script>
+</body>
+</html>

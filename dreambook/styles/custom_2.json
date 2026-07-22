@@ -1,0 +1,11 @@
+{
+  "name": "custom_2",
+  "label": "自定义风格 2",
+  "label_en": "Custom Style 2",
+  "prompt_prefix": "",
+  "negative_prefix": "low quality, blurry, deformed, extra fingers, scary",
+  "steps": 24,
+  "cfg": 3.5,
+  "is_custom": true,
+  "note": "用户首次用时通过 --custom-prompt '提示词' 写入 prompt_prefix，之后直接 --style custom_2 复用"
+}

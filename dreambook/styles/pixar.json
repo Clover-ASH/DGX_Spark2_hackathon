@@ -1,0 +1,9 @@
+{
+  "name": "pixar",
+  "label": "皮克斯 3D 动画风",
+  "label_en": "Pixar 3D Animation",
+  "prompt_prefix": "Pixar 3D animation style, modern Disney Pixar look, vibrant saturated colors, soft global illumination, big expressive eyes, stylized cartoon proportions, smooth subsurface scattering skin, cinematic rim light, highly detailed, children's book illustration",
+  "negative_prefix": "photorealistic, real photo, scary, creepy, deformed, extra fingers, low quality, blurry, dark horror",
+  "steps": 24,
+  "cfg": 3.5
+}
